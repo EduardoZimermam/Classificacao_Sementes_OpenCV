@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from segm import segmentacao
+from extract import extracao
+from classificacao import classifica
 import cv2
 
 if __name__ == '__main__':
 
 
-	img = cv2.imread('images/Emex_australis_06.jpg')
-
-	segmentacao(img)
+	image = cv2.imread('images/Emex_australis_06.jpg')
+	
+	segmentacao(image)
 
 	# separacao()
 
-	# extracao()
+	# extracao(image, thresh)
 
-	# classificacao()
+	# classifica(vetCarac)
