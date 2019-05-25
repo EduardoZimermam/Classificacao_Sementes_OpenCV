@@ -14,7 +14,7 @@ def segmentacao(img):
 	_, thresh = cv2.threshold(blur, 200, 255, cv2.THRESH_BINARY_INV)
 
 
-	cv2.imshow('Imagem Binarizada', thresh)
-	cv2.waitKey(0)
+	# cv2.imshow('Imagem Binarizada', thresh)
+	# cv2.waitKey(0)
 
 	return(thresh)

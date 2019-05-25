@@ -3,10 +3,11 @@
 import cv2
 import numpy as np
 from segm import segmentacao
+from separacao import subimages
 from extract import extracao
 from classificacao import classifica
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
@@ -16,11 +17,13 @@ if __name__ == '__main__':
 	
 	thresh = segmentacao(image)
 
-	# separacao()
+	subimages(image, thresh)
+
 
 	vetCarac = np.array([])
 	vetCarac = extracao(thresh)
 	
+	#----- DANDO ERRO (VER) ----#
 
 	X1, KMEANS, dbscan = classifica(vetCarac)
 
