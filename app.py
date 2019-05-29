@@ -13,15 +13,16 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
 
 
-	image = cv2.imread('images/Emex_australis_06.jpg')
+	image = cv2.imread('images/Ipomoea_amnicola_09_2.jpg')
 	
 	thresh = segmentacao(image)
 
-	subimages(image, thresh)
+	subimages(thresh,thresh)
 
 
 	vetCarac = np.array([])
-	vetCarac = extracao(thresh)
+	green, _, _ = cv2.split(image)
+	vetCarac = extracao(green)
 	
 	#----- DANDO ERRO (VER) ----#
 

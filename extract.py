@@ -8,12 +8,14 @@ from skimage.feature import hog
 
 def extracao(thresh):
 
+	
 	vetCarac = np.array([])
 	vetCarac = np.concatenate((vetCarac,huMoments(thresh)), axis = None)
 	vetCarac = np.concatenate((vetCarac,LBP(thresh)), axis = None)
 	vetCarac = np.concatenate((vetCarac,HOG(thresh)), axis = None)
 	#vetCarac = np.concatenate((vetCarac,GABOR(thresh)), axis = None)
 	#vetCarac = np.concatenate((vetCarac,convexHull(thresh)), axis = None)
+
 
 	return(vetCarac)
 

@@ -4,18 +4,22 @@ import numpy as np
 import cv2
 
 def subimages(image,thresh):
+	
+
+	img = thresh.copy()
+
 
 	if cv2.__version__.startswith('3.'):
-		img2, contornos, hierarquia = cv2.findContours(thresh, 1, 2)
+		_, contornos,_ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	else:
-		contornos, hierarquia = cv2.findContours(thresh, 1, 2)
+		contornos,_ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+		
+	
 
-	for x in contornos:
-		cnt = x
-		rect = cv2.minAreaRect(cnt)
-		box = cv2.boxPoints(rect)
-		box = np.int0(box)
-		cv2.drawContours(image,[box],0,(0,0,255),2)
+	for i,_ in enumerate(contornos):
+		x, y, width, height = cv2.boundingRect(contornos[i])
+		#vetor 
+		#média
 
-	cv2.imshow('Contours', image)
-	cv2.waitKey(0)
+		roi = thresh[y:y+height, x:x+width]
+		cv2.imwrite('subpictures/'+ str(i) +'.png', roi)
