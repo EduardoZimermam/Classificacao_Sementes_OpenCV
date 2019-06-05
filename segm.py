@@ -17,7 +17,7 @@ def segmentacao(img):
 	thresh = thresh * imgGray
 
 
-	cv2.imshow('Imagem Binarizada', thresh)
-	cv2.waitKey(0)
+	# cv2.imshow('Imagem Binarizada', thresh)
+	# cv2.waitKey(0)
 
 	return(thresh)

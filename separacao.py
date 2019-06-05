@@ -3,7 +3,7 @@
 import numpy as np
 import cv2
 
-def subimages(image,thresh):
+def subimages(thresh, nome):
 	
 
 	img = thresh.copy()
@@ -27,4 +27,4 @@ def subimages(image,thresh):
 		x, y, width, height = cv2.boundingRect(contornos[i])
 		if width and height > limiar:
 			roi = thresh[y:y+height, x:x+width]
-			cv2.imwrite('subpictures/'+ str(i) +'.png', roi)
+			cv2.imwrite('subpictures/'+ nome + str(i) +'.png', roi)

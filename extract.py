@@ -16,7 +16,6 @@ def extracao(thresh):
 	#vetCarac = np.concatenate((vetCarac,GABOR(thresh)), axis = None)
 	#vetCarac = np.concatenate((vetCarac,convexHull(thresh)), axis = None)
 
-
 	return(vetCarac)
 
 
