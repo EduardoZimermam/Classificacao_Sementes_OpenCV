@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import cv2
-from glob import glob
 import numpy as np
+from glob import glob
 from segm import segmentacao
 from separacao import subimages
 from extract import extracao
@@ -10,7 +10,8 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
 
-from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
+from classificacao import classifica
 
 
 if __name__ == '__main__':
@@ -43,24 +44,29 @@ if __name__ == '__main__':
 		
 		vetCarac.append(extracao(image))
 
-	vetCarac = preprocessing.normalize(vetCarac)
 
-	#classifica(vetCarac)
+	print('Iniciando a clusterização das subimagens...')
+	
+	# classifica()
 
+	scaler = StandardScaler()
+	vetCarac = scaler.fit_transform(vetCarac)
+
+	from sklearn.decomposition import PCA
+
+	pca = PCA(n_components=2)
+	X_pca = pca.fit_transform(vetCarac)
 	
 	
+	KMEANS = KMeans(n_clusters=7).fit_predict(X_pca)
 
-	vetCarac = np.array(vetCarac)
-
-	KMEANS = KMeans(n_clusters=7).fit_predict(vetCarac)
-
-	dbscan = DBSCAN(eps=0.5, min_samples=10, metric_params=None).fit_predict(vetCarac)
+	dbscan = DBSCAN(eps=1.0, min_samples=10).fit_predict(X_pca)
 
 	plt.subplot(2,1,1)
-	plt.scatter(vetCarac[:, 0], vetCarac[:, 1], c= KMEANS, edgecolor='k', alpha=0.9)
+	plt.scatter(X_pca[:, 0], X_pca[:, 1], c= KMEANS, edgecolor='k', alpha=0.9)
 	plt.title("K-MEANS vs DBSCAN")
 	plt.subplot(2,1,2)
-	plt.scatter(vetCarac[:, 0], vetCarac[:, 1], c=dbscan, edgecolor='k', alpha=0.9)
+	plt.scatter(X_pca[:, 0], X_pca[:, 1], c=dbscan, edgecolor='k', alpha=0.9)
 
 
 	plt.show()
