@@ -14,17 +14,19 @@ def subimages(thresh, nome):
 	else:
 		contornos,_ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 		
-	vet_tam = []
+	vet_lar = []
+	vet_alt = []
 
 	for i,_ in enumerate(contornos):
 		_, _, width, height = cv2.boundingRect(contornos[i])
-		vet_tam.append(height)
-		vet_tam.append(width)
+		vet_alt.append(height)
+		vet_lar.append(width)
 			
-	limiar = 0.4*np.mean(vet_tam) #media de largura e altura
+	limiar_alt = 0.4*np.mean(vet_alt) #media de largura e altura
+	limiar_lar = 0.4*np.mean(vet_lar) #media de largura e altura
 	
 	for i,_ in enumerate(contornos):
 		x, y, width, height = cv2.boundingRect(contornos[i])
-		if width and height > limiar:
+		if width > limiar_lar and height > limiar_alt:
 			roi = thresh[y:y+height, x:x+width]
-			cv2.imwrite('subpictures/'+ nome + str(i) +'.png', roi)
+ 			cv2.imwrite('subpictures/'+ nome + str(i) +'.png', roi)

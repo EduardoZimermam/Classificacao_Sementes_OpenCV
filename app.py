@@ -6,19 +6,21 @@ from glob import glob
 from segm import segmentacao
 from separacao import subimages
 from extract import extracao
+from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
-
-from sklearn.preprocessing import StandardScaler
-from classificacao import classifica
 
 
 if __name__ == '__main__':
 
   	print('Iniciando a segmentação e subdivisão das imagens...')
 
-	for pasta in glob('Trabalho_PI_2019/*'):
+  	labels = []
+
+	for i, pasta in enumerate(glob('Trabalho_PI_2019/*')):
+
+		labels.append(pasta.replace('Trabalho_PI_2019/', ''))	
 		for img in glob(pasta + '/*.jpg'):
 
 			image = cv2.imread(img)
@@ -29,7 +31,6 @@ if __name__ == '__main__':
 			thresh = segmentacao(image)
 
 			subimages(thresh, nome)
-
 		
 	print('Todas as imagens foram segmentadas e divididas...')
 
@@ -45,28 +46,82 @@ if __name__ == '__main__':
 		vetCarac.append(extracao(image))
 
 
-	print('Iniciando a clusterização das subimagens...')
-	
-	# classifica()
-
 	scaler = StandardScaler()
 	vetCarac = scaler.fit_transform(vetCarac)
 
+
+	print('Iniciando a clusterização das subimagens...')
+	
+	
+
+	
+
 	from sklearn.decomposition import PCA
+	from sklearn import metrics
 
-	pca = PCA(n_components=2)
-	X_pca = pca.fit_transform(vetCarac)
+	# pca = PCA(n_components=10)
+	# vetCarac = pca.fit_transform(vetCarac)
 	
+	db = DBSCAN(eps=0.8, min_samples=10).fit(vetCarac)
+
+	core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
+	core_samples_mask[db.core_sample_indices_] = True
+	labels = db.labels_
+
+	# Number of clusters in labels, ignoring noise if present.
+	n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+	n_noise_ = list(labels).count(-1)
+
+	print('Estimated number of clusters: %d' % n_clusters_)
+	print('Estimated number of noise points: %d' % n_noise_)
 	
-	KMEANS = KMeans(n_clusters=7).fit_predict(X_pca)
+	print("Silhouette Coefficient: %0.3f"
+	      % metrics.silhouette_score(vetCarac, labels))
 
-	dbscan = DBSCAN(eps=1.0, min_samples=10).fit_predict(X_pca)
+	# #############################################################################
+	# Plot result
+	import matplotlib.pyplot as plt
 
-	plt.subplot(2,1,1)
-	plt.scatter(X_pca[:, 0], X_pca[:, 1], c= KMEANS, edgecolor='k', alpha=0.9)
-	plt.title("K-MEANS vs DBSCAN")
-	plt.subplot(2,1,2)
-	plt.scatter(X_pca[:, 0], X_pca[:, 1], c=dbscan, edgecolor='k', alpha=0.9)
+	# Black removed and is used for noise instead.
+	unique_labels = set(labels)
+	colors = [plt.cm.Spectral(each)
+	          for each in np.linspace(0, 1, len(unique_labels))]
+	for k, col in zip(unique_labels, colors):
+	    if k == -1:
+	        # Black used for noise.
+	        col = [0, 0, 0, 1]
 
+	    class_member_mask = (labels == k)
 
+	    xy = vetCarac[class_member_mask & core_samples_mask]
+	    plt.plot(xy[:, 1], xy[:, 3], 'o', markerfacecolor=tuple(col),
+	             markeredgecolor='k', markersize=14)
+
+	    xy = vetCarac[class_member_mask & ~core_samples_mask]
+	    plt.plot(xy[:, 1], xy[:, 3], 'o', markerfacecolor=tuple(col),
+	             markeredgecolor='k', markersize=6)
+
+	plt.title('Estimated number of clusters: %d' % n_clusters_)
 	plt.show()
+
+
+
+
+	# from mpl_toolkits.mplot3d import Axes3D
+
+	# # initialize figure and 3d projection for the PC3 data
+	# fig = plt.figure()
+	# ax = fig.add_subplot(111, projection='3d')
+
+	# # assign x,y,z coordinates from PC1, PC2 & PC3
+	# xs = vetCarac.T[0]
+	# ys = vetCarac.T[1]
+	# zs = vetCarac.T[2]
+
+	# plot = ax.scatter(xs, ys, zs, alpha=0.75,
+	#                   c=dbscan, cmap='viridis', depthshade=True)
+
+
+	# fig.colorbar(plot, shrink=0.6, aspect=9)
+	# plt.show()
+

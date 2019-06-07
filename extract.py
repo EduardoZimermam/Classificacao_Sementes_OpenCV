@@ -10,11 +10,9 @@ def extracao(thresh):
 	
 	vetCarac = np.array([])
 	vetCarac = np.concatenate((vetCarac,huMoments(thresh)), axis = None)
-	vetCarac = np.concatenate((vetCarac,LBP(thresh)), axis = None)
-	vetCarac = np.concatenate((vetCarac,HOG(thresh)), axis = None)
-	# vetCarac = np.concatenate((vetCarac,GABOR(thresh)), axis = None)
-	# vetCarac = np.concatenate((vetCarac,convexHull(thresh)), axis = None)
-
+	# vetCarac = np.concatenate((vetCarac,LBP(thresh)), axis = None)
+	# vetCarac = np.concatenate((vetCarac,HOG(thresh)), axis = None)
+	
 	return(vetCarac)
 
 
@@ -56,27 +54,3 @@ def HOG(thresh):
 	media = soma / count
 	
 	return(media)
-
-
-
-
-def GABOR(thresh):
-	
-	g_kernel = cv2.getGaborKernel((21, 21), 8.0, np.pi/4, 10.0, 0.5, 0, ktype=cv2.CV_32F)
-
-	#print(g_kernel)
-
-
-
-def convexHull(thresh):
-
-	if cv2.__version__.startswith('3.'):
-		img2, contornos, hierarquia = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-		#Cada contorno é armazenado como um vetor de pontos.
-	else:
-		contornos, hierarquia = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-	for i in range(len(contornos)):
-	    hull = cv2.convexHull(contornos[i])
-
-	#print(hull)

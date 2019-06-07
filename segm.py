@@ -12,12 +12,11 @@ def segmentacao(img):
 
 	blur = cv2.GaussianBlur(saturation, (25,25), 0)
 
-	_, thresh = cv2.threshold(blur, 150, 255, cv2.THRESH_BINARY_INV)
+	_, thresh = cv2.threshold(blur, 175, 255, cv2.THRESH_BINARY_INV)
 
 	thresh = thresh * imgGray
 
-
-	# cv2.imshow('Imagem Binarizada', thresh)
+	# cv2.imshow('Imagem Binarizada', blue)
 	# cv2.waitKey(0)
 
 	return(thresh)
