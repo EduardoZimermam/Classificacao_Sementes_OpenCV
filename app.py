@@ -10,29 +10,38 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import normalize
+import os.path
+from sklearn.datasets import make_blobs
 
 
 if __name__ == '__main__':
 
-  	print('Iniciando a segmentação e subdivisão das imagens...')
+	#se nao existir a pasta de subpictures
+	if not (os.path.isdir('./subpictures')):
+	  		os.mkdir('./subpictures') #criar
 
-  	labels = []
+	if len(os.listdir('./subpictures') ) == 0:
+		print('Iniciando a segmentação e subdivisão das imagens...')
+	  	labels = []
 
-	for i, pasta in enumerate(glob('Trabalho_PI_2019/*')):
+	 	
+		for i, pasta in enumerate(glob('Trabalho_PI_2019/*')):
 
-		labels.append(pasta.replace('Trabalho_PI_2019/', ''))	
-		for img in glob(pasta + '/*.jpg'):
+			labels.append(pasta.replace('Trabalho_PI_2019/', ''))	
+			for img in glob(pasta + '/*.jpg'):
+				image = cv2.imread(img)
 
-			image = cv2.imread(img)
-
-			nome = img.replace(pasta, '')
-			nome = nome.replace('.jpg', '_')
+				nome = img.replace(pasta, '')
+				nome = nome.replace('.jpg', '_')
+				
+				thresh = segmentacao(image)
+				
+				subimages(thresh, nome)
 			
-			thresh = segmentacao(image)
+		print('Todas as imagens foram segmentadas e divididas...')
 
-			subimages(thresh, nome)
-		
-	print('Todas as imagens foram segmentadas e divididas...')
+
 
 	print('Iniciando a extração das características das subimagens...')
 
@@ -61,7 +70,8 @@ if __name__ == '__main__':
 
 	# pca = PCA(n_components=10)
 	# vetCarac = pca.fit_transform(vetCarac)
-	
+
+####################### DB ########################################	
 	db = DBSCAN(eps=0.8, min_samples=10).fit(vetCarac)
 
 	core_samples_mask = np.zeros_like(db.labels_, dtype=bool)
@@ -80,6 +90,8 @@ if __name__ == '__main__':
 
 	# #############################################################################
 	# Plot result
+
+	# pyplot.show()
 	import matplotlib.pyplot as plt
 
 	# Black removed and is used for noise instead.
