@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 
 def segmentacao(img):
+	
 	gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 	
 	hsvImg = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -21,7 +22,5 @@ def segmentacao(img):
 	
 
 	thresh = thresh * gray
-	# cv2.imshow("Imagem", thresh)
-	# cv2.waitKey(0)
 
 	return(thresh)

@@ -2,17 +2,16 @@
 
 import cv2
 import numpy as np
+import math
 from skimage.feature import local_binary_pattern
-from skimage.feature import hog
+
 
 def extracao(thresh):
 
-	
 	vetCarac = np.array([])
 	vetCarac = np.concatenate((vetCarac,huMoments(thresh)), axis = None)
 	# vetCarac = np.concatenate((vetCarac,LBP(thresh)), axis = None)
-	# vetCarac = np.concatenate((vetCarac,HOG(thresh)), axis = None)
-	
+		
 	return(vetCarac)
 
 
@@ -21,6 +20,9 @@ def huMoments(thresh):
 
 	moments = cv2.moments(thresh)
 	huMoments = cv2.HuMoments(moments)
+
+	for i in range(0,7):
+  		huMoments[i] = -1* math.copysign(1.0, huMoments[i]) * math.log10(abs(huMoments[i]))
 
 	return(huMoments)
 
@@ -36,21 +38,3 @@ def LBP(thresh):
 	hist, _ = np.histogram(lbp, bins = n_bins, range = (0, n_bins))
 
 	return(hist)
-
-
-
-def HOG(thresh):
-
-	carc, hog_image = hog(thresh, orientations=8, pixels_per_cell=(16, 16), cells_per_block=(1, 1), block_norm='L1', visualize=True, multichannel=False)
-	
-	count = 0
-	soma = 0 
-
-	for x in carc:
-		if(x > 0):
-			soma += x
-			count += 1
-	
-	media = soma / count
-	
-	return(media)

@@ -2,9 +2,9 @@
 
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 
 def subimages(thresh, nome):
+
 	img = thresh.copy()
 
 	if cv2.__version__.startswith('3.'):
@@ -39,10 +39,8 @@ def subimages(thresh, nome):
 		cv2.drawContours(black, [hull], -1, (255, 255, 255), -1)
 		r, t2 = cv2.threshold(black, 127, 255, cv2.THRESH_BINARY)
 		masked = cv2.bitwise_and(thresh, thresh, mask = t2)
-		
-		# cv2.imshow("Imagem2", masked)
-		# cv2.waitKey(0)
-		
+	
+
 		#corta a imagem em um retangulo menor
 		_, _, width, height = cv2.boundingRect(contornos[i])
 
