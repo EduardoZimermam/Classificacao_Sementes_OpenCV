@@ -26,17 +26,17 @@ if __name__ == '__main__':
 
 	  	labels = []
 
+		print('Iniciando a segmentação e subdivisão das imagens...')
+		  	
 		for i, pasta in enumerate(glob('Base_Imagens_PI/Trabalho_PI_2019/*')):
 			labels.append(pasta.replace('Base_Imagens_PI/Trabalho_PI_2019/', ''))
 
-		print('Iniciando a segmentação e subdivisão das imagens...')
-
-		for img in glob(pasta + '/*.jpg'):
-			image = cv2.imread(img)
-			nome = img.replace(pasta, '')
-			nome = nome.replace('.jpg', '_')
-			thresh = segmentacao(image)
-			subimages(thresh, nome)
+			for img in glob(pasta + '/*.jpg'):
+				image = cv2.imread(img)
+				nome = img.replace(pasta, '')
+				nome = nome.replace('.jpg', '_')
+				thresh = segmentacao(image)
+				subimages(thresh, nome)
 
 		print('Todas as imagens foram segmentadas e divididas...')
 
