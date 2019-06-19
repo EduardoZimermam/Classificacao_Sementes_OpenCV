@@ -62,7 +62,11 @@ if __name__ == '__main__':
 	print('\n')
 
 
-	KMEANS = KMeans(n_clusters=7).fit_predict(vetCarac)
+	KMEANS = KMeans(n_clusters=7).fit(vetCarac)
+
+	labels_KM = KMEANS.labels_
+	n_noise_KM = list(labels_KM).count(-1)
+	KMEANS = KMEANS.fit_predict(vetCarac)
 
 	dbscan = DBSCAN(eps=1.0, min_samples= 10).fit(vetCarac)
 
@@ -72,6 +76,13 @@ if __name__ == '__main__':
 	# Number of clusters in labels, ignoring noise if present.
 	n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 	n_noise_ = list(labels).count(-1)
+
+	
+	print('---------- KMEANS ----------')
+	print('Número estimado de clusters: %d' % 7)
+	print('Número de pontos não classificados: %d' % n_noise_KM)
+	print("Coeficiente de Silhouette: %0.3f" % metrics.silhouette_score(vetCarac, labels_KM))
+	print('\n')
 
 	print('---------- DBSCAN ----------')
 	print('Número estimado de clusters: %d' % n_clusters_)
